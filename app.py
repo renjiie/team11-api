@@ -25,14 +25,6 @@ chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument("--no-sandbox")
-driver = webdriver.Chrome(executable_path=os.environ.get(
-    "CHROMEDRIVER_PATH"), chrome_options=chrome_options)
-driver.maximize_window()
-wait = WebDriverWait(driver, 10)
-driver.get("https://www.dream11.com/leagues")
-time.sleep(3)
-driver.find_elements_by_class_name("whiteBorderedButton_6b901")[0].click()
-time.sleep(3)
 
 def _get_data():
   contest = wait.until(ec.visibility_of_element_located((By.XPATH,"/html/body/div/div/div[3]/div/div/div[2]/div/div[2]/a/div[2]/div/div")))
@@ -51,6 +43,14 @@ def _get_data():
 @app.route("/phoneNumber", methods=['POST'])
 @cross_origin(origin='https://team11-app.netlify.app/')
 def phoneNumber():
+    driver = webdriver.Chrome(executable_path=os.environ.get(
+            "CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+    driver.maximize_window()
+    wait = WebDriverWait(driver, 10)
+    driver.get("https://www.dream11.com/leagues")
+    time.sleep(3)
+    driver.find_elements_by_class_name("whiteBorderedButton_6b901")[0].click()
+    time.sleep(3)
     print("Phone No verification..")
     jsonData = request.get_json()
     print(jsonData)
