@@ -140,7 +140,7 @@ def update_points():
 
 @app.route("/database", methods=['GET'])
 @cross_origin(origin='https://team11-app.netlify.app/')
-def update_points():
+def update_db():
   print("Updating Historical data to DB")
   driver.execute_script("window.history.go(-2)")
   games = driver.find_elements_by_partial_link_text("VIVO")
