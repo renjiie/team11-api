@@ -12,12 +12,14 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
 LIVE = True
+driver = None
 
 app = Flask(__name__)
 CORS(app)
 
 player_names = {'reub': 'Mighty Spearheads', 'renj': 'Paavam XI', 'suva': 'kaala Venghai',
                 'gopi': 'GOPI5', 'dani': 'Aj team817KT', 'akm': 'SaidapetSuperkings'}
+
 
 player_dict = {}
 chrome_options = Options()
@@ -43,6 +45,7 @@ def _get_data():
 @app.route("/phoneNumber", methods=['POST'])
 @cross_origin(origin='https://team11-app.netlify.app/')
 def phoneNumber():
+    global driver
     driver = webdriver.Chrome(executable_path=os.environ.get(
             "CHROMEDRIVER_PATH"), chrome_options=chrome_options)
     driver.maximize_window()
@@ -68,7 +71,7 @@ def phoneNumber():
 @app.route("/otp", methods=['POST'])
 @cross_origin(origin='https://team11-app.netlify.app/')
 def otp():
-    global LIVE
+    global LIVE, driver
     print("OTP verification..")
     otp_no = request.get_json()
     print(otp_no)
@@ -123,6 +126,7 @@ def otp():
 @app.route("/refresh", methods=['GET'])
 @cross_origin(origin='https://team11-app.netlify.app/')
 def update_points():
+    global driver
     print("Updating latest points")
     driver.refresh()
     time.sleep(4)
@@ -141,6 +145,7 @@ def update_points():
 @app.route("/database", methods=['GET'])
 @cross_origin(origin='https://team11-app.netlify.app/')
 def update_db():
+  global driver
   print("Updating Historical data to DB")
   driver.execute_script("window.history.go(-2)")
   games = driver.find_elements_by_partial_link_text("VIVO")
