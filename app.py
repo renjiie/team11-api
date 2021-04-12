@@ -34,6 +34,20 @@ time.sleep(3)
 driver.find_elements_by_class_name("whiteBorderedButton_6b901")[0].click()
 time.sleep(3)
 
+def _get_data():
+  contest = wait.until(ec.visibility_of_element_located((By.XPATH,"/html/body/div/div/div[3]/div/div/div[2]/div/div[2]/a/div[2]/div/div")))
+  contest.click()
+  time.sleep(2)
+  containers = driver.find_elements_by_xpath("/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")
+  info = str(containers[0].text).split('\n')
+  if "WINNER!" in info:
+    info.remove("WINNER!")
+
+  for i in range(0,len(info),4):
+    player_dict[info[i]] = info[i+2]
+  return player_dict
+  
+
 @app.route("/phoneNumber", methods=['POST'])
 @cross_origin(origin='https://team11-app.netlify.app/')
 def phoneNumber():
@@ -123,6 +137,25 @@ def update_points():
     response_object = {"status": "success",
                        "message": player_dict, "live": LIVE}
     return jsonify(response_object)
+
+@app.route("/database", methods=['GET'])
+@cross_origin(origin='https://team11-app.netlify.app/')
+def update_points():
+  print("Updating Historical data to DB")
+  driver.execute_script("window.history.go(-2)")
+  games = driver.find_elements_by_partial_link_text("VIVO")
+  for i in range(len(games)):
+    # Get all completed matches
+    games = driver.find_elements_by_partial_link_text("VIVO")
+    game = games[i]
+    game.click()
+    leaderboard = _get_data() 
+    # --> Add code here to insert leaderboard of each game to DB <--
+    driver.execute_script("window.history.go(-2)")
+    time.sleep(2)
+    driver.find_element_by_xpath(COMPLETED).click()
+    time.sleep(1)
+  
 
 if __name__ == "__main__":
     app.run()
