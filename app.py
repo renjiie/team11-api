@@ -7,7 +7,10 @@ from flask_cors import CORS,cross_origin
 import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-# comment
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as ec
+
 LIVE = True
 
 app = Flask(__name__)
@@ -25,6 +28,7 @@ chrome_options.add_argument("--no-sandbox")
 driver = webdriver.Chrome(executable_path=os.environ.get(
     "CHROMEDRIVER_PATH"), chrome_options=chrome_options)
 driver.maximize_window()
+wait = WebDriverWait(driver, 10)
 driver.get("https://www.dream11.com/leagues")
 time.sleep(3)
 driver.find_elements_by_class_name("whiteBorderedButton_6b901")[0].click()
@@ -62,8 +66,8 @@ def otp():
     time.sleep(5)
 
     print("Getting info..")
-    driver.find_element_by_xpath(
-        "/html/body/div/div/div[3]/div/div/div[3]/div/div/a[2]/div[1]/i").click()
+    my_matches = wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div/div/div[3]/div/div/div[3]/div/div/a[2]/div[1]/i")))
+    my_matches.click()
     time.sleep(3)
 
     # Live matches
