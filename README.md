@@ -5,9 +5,12 @@ Api and backend connectivity for team11
 Python3
 
 ### To run in local
->*Install requirements in venv
->*update the chromedriver path in run.py
->*gunicorn run:app
+>Install requirements in venv
+>
+>update the chromedriver path in run.py
+>
+>gunicorn run:app
 
 ### To run in prod
-*push app.py to heroku service
+>
+>push app.py to heroku service
