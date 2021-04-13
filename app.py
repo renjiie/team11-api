@@ -29,7 +29,7 @@ chrome_options.add_argument("--no-sandbox")
 class Team11(object):
 
   def _get_data(self):
-    contest = wait.until(ec.visibility_of_element_located((By.XPATH,"/html/body/div/div/div[3]/div/div/div[2]/div/div[2]/a/div[2]/div/div")))
+    contest = self.wait.until(ec.visibility_of_element_located((By.XPATH,"/html/body/div/div/div[3]/div/div/div[2]/div/div[2]/a/div[2]/div/div")))
     contest.click()
     time.sleep(2)
     containers = self.driver.find_elements_by_xpath("/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")
@@ -46,7 +46,7 @@ class Team11(object):
       self.driver = webdriver.Chrome(executable_path=os.environ.get(
               "CHROMEDRIVER_PATH"), chrome_options=chrome_options)
       self.driver.maximize_window()
-      wait = WebDriverWait(self.driver, 10)
+      self.wait = WebDriverWait(self.driver, 10)
       self.driver.get("https://www.dream11.com/leagues")
       time.sleep(3)
       self.driver.find_elements_by_class_name("whiteBorderedButton_6b901")[0].click()
@@ -78,7 +78,7 @@ class Team11(object):
       time.sleep(5)
 
       print("Getting info..")
-      my_matches = wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div/div/div[3]/div/div/div[3]/div/div/a[2]/div[1]/i")))
+      my_matches = self.wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div/div/div[3]/div/div/div[3]/div/div/a[2]/div[1]/i")))
       my_matches.click()
       time.sleep(3)
 
