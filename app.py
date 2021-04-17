@@ -140,6 +140,7 @@ class Team11(object):
           entry_exists = True
           print ("Insertion Not required: Team already present for today's match!");
           response_object = {"status": "failed","message": "Data already inserted "}
+          break
 
       if not entry_exists:
         print ("Insertion required: Team not present for today's match!");
@@ -159,12 +160,14 @@ class Team11(object):
         if data['_id'] == match_name:
            team_from_db = data
            print("DB team", data)
+           break
       if not team_from_db :
           print("Team names not present in DB. Please insert first: /insertteams")
       driver.refresh()
-      time.sleep(4)
-      containers = driver.find_elements_by_xpath(
-          "/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")
+      wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")))
+      containers = driver.find_elements_by_xpath("/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")
+      print("CONTAINER:", containers)
+
       info = str(containers[0].text).split('\n')
       print("INFO", info)
 
