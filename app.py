@@ -146,7 +146,7 @@ class Team11(object):
       for data in mycol.find():
         if data['_id'] == match_name:
            team_from_db = data
-           print("DB team": data)
+           print("DB team", data)
       driver.refresh()
       time.sleep(4)
       containers = driver.find_elements_by_xpath(
