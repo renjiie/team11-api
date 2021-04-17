@@ -143,10 +143,13 @@ class Team11(object):
       match_name = Matches[today]
       mydb = myclient["team11"]
       mycol = mydb["teams"]
+      team_from_db = ""
       for data in mycol.find():
         if data['_id'] == match_name:
            team_from_db = data
            print("DB team", data)
+      if not team_from_db :
+          print("Team names not present in DB. Please insert first: /insertteams")
       driver.refresh()
       time.sleep(4)
       containers = driver.find_elements_by_xpath(
