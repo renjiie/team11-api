@@ -98,6 +98,9 @@ class Team11(object):
       except Exception:
           LIVE = False
           print("No Live matches currently!")
+          # response_object = {"status": "success",
+          #                   "message": "No LIVE matches in-progress.Please come back during match time!", "live": LIVE}
+          # return jsonify(response_object)
 
       # Completed Matches
       if not LIVE:
@@ -131,16 +134,19 @@ class Team11(object):
       mycol = mydb["teams"]
       team_json = request.get_json()
       team_json['team']['_id'] = match_name
+      entry_exists = None
       for data in mycol.find():
         if data['_id'] == match_name:     
+          entry_exists = True
           print ("Insertion Not required: Team already present for today's match!");
           response_object = {"status": "failed","message": "Data already inserted "}
-          return jsonify(response_object)
-        else:
-          print ("Insertion required: Team not present for today's match!");
-          mycol.insert_one(team_json['team'])
-          response_object = {"status": "success","message": "Data inserted successfully"}
-          return jsonify(response_object)
+
+      if not entry_exists:
+        print ("Insertion required: Team not present for today's match!");
+        mycol.insert_one(team_json['team'])
+        response_object = {"status": "success","message": "Data inserted successfully"}
+
+      return jsonify(response_object)
 
   def do_refresh(self):
       print("Updating latest points")
@@ -160,11 +166,12 @@ class Team11(object):
       containers = driver.find_elements_by_xpath(
           "/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")
       info = str(containers[0].text).split('\n')
+      print("INFO", info)
+
       if "WINNER!" in info:
           info.remove("WINNER!")
       for i in range(0, len(info), 4):
           player_dict[info[i]] = info[i+2]
-      print("INFO", info)
       response_object = {"status": "success",
               "message": player_dict, "live": LIVE, 'Dbteam': team_from_db}
       return jsonify(response_object)
