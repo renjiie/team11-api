@@ -131,17 +131,17 @@ class Team11(object):
       mycol = mydb["teams"]
       team_json = request.get_json()
       team_json['team']['_id'] = match_name
-      mycol.insert_one(team_json['team'])
-      response_object = {"status": "success",
-              "message": "Data inserted successfully"}
-      return jsonify(response_object)
-    #   for data in mycol.find():
-    #     if data['_id'] == match_name:
+      for data in mycol.find():
+        if data['_id'] == match_name:
+            
+          print ("Insertion Not required: Team already present for today's match!");
+          response_object = {"status": "failed","message": "Data already inserted "}
+          return jsonify(response_object)
 
-    #       print ("Insertion Not required: Team already present for today's match!");
-
-    #     else:
-    #       mycol.insert_one(team_json['team'])
+        else:
+          mycol.insert_one(team_json['team'])
+          response_object = {"status": "success","message": "Data inserted successfully"}
+          return jsonify(response_object)
 
   def do_refresh(self):
       print("Updating latest points")
