@@ -43,7 +43,8 @@ class Team11(object):
   def _get_data(self):
     contest = wait.until(ec.visibility_of_element_located((By.XPATH,"/html/body/div/div/div[3]/div/div/div[2]/div/div[2]/a/div[2]/div/div")))
     contest.click()
-    containers = wait.until(ec.visibility_of_element_located((By.XPATH,"/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")))
+    wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")))    
+    containers = driver.find_elements_by_xpath("/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")
     info = str(containers[0].text).split('\n')
     if "WINNER!" in info:
       info.remove("WINNER!")
@@ -111,8 +112,9 @@ class Team11(object):
   
       
       temp1 = wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div/div/div[3]/div/div/div[2]/div/div[2]/a/div[2]/div/div")))
-      temp1.click()
-      containers = wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")))
+      temp1.click()      
+      wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")))      
+      containers = driver.find_elements_by_xpath("/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")
       info = str(containers[0].text).split('\n')
       if "WINNER!" in info:
           info.remove("WINNER!")
