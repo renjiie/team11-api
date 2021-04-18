@@ -16,7 +16,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
 LIVE = True
-CUT_OFF_TIME = 17
+CUT_OFF_TIME = 11
 
 app = Flask(__name__)
 CORS(app)
@@ -140,6 +140,7 @@ class Team11(object):
           print("Match list:", match_list)
           time_now = datetime.now()
           print("--Time in int: %d" % (int(time_now.strftime("%H"))))
+          # 11 is UTC Heroku server time +6:30 IST
           if int(time_now.strftime("%H")) < CUT_OFF_TIME:
               print("--inside if--")
               team_json['team']['_id'] = match_list[0]
@@ -176,7 +177,8 @@ class Team11(object):
           match_list = [item.strip() for item in match_list]
           time_now = datetime.now()
           # Cut off time for First match to complete - 7:45pm
-          if int(time_now.strftime("%H%M")) < 1945:
+          # 1410 is UTC Heroku server time
+          if int(time_now.strftime("%H%M")) < 1410:
               match_name = match_list[0]
           else:
               match_name = match_list[1]
