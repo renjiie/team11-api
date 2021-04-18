@@ -147,7 +147,7 @@ class Team11(object):
 
       entry_exists = None
       for data in mycol.find():
-        if data['_id'] == match_name:     
+        if data['_id'] == team_json['team']['_id']:     
           entry_exists = True
           print ("Insertion Not required: Team already present for today's match!");
           response_object = {"status": "failed","message": "Data already inserted "}
