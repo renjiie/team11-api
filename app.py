@@ -21,6 +21,7 @@ CUT_OFF_TIME = 11
 app = Flask(__name__)
 CORS(app)
 
+# Not used
 player_names = {'reub': 'Mighty Spearheads', 'renj': 'Paavam XI', 'suva': 'kaala Venghai',
                 'gopi': 'GOPI5', 'dani': 'Aj team817KT', 'akm': 'SaidapetSuperkings'}
 # Selenium attributes
