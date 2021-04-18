@@ -56,8 +56,8 @@ class Team11(object):
 
   def get_phone_no(self):
       driver.get("https://www.dream11.com/leagues")
-      time.sleep(3)
-      driver.find_elements_by_class_name("whiteBorderedButton_6b901")[0].click()
+      login = wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div/div/div[3]/div/div/div[1]/div[1]/div/div/div[2]/div/a")))
+      login.click()
       time.sleep(3)
       print("Phone No verification..")
       jsonData = request.get_json()
