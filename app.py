@@ -6,6 +6,7 @@ import pymongo
 import time
 from schedule import Matches
 from datetime import date
+from datetime import datetime
 from flask import Flask, request, jsonify
 from flask_cors import CORS,cross_origin
 from selenium import webdriver
@@ -15,6 +16,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
 LIVE = True
+CUT_OFF_TIME = "17"
 
 app = Flask(__name__)
 CORS(app)
@@ -41,8 +43,7 @@ class Team11(object):
   def _get_data(self):
     contest = wait.until(ec.visibility_of_element_located((By.XPATH,"/html/body/div/div/div[3]/div/div/div[2]/div/div[2]/a/div[2]/div/div")))
     contest.click()
-    time.sleep(2)
-    containers = driver.find_elements_by_xpath("/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")
+    containers = wait.until(ec.visibility_of_element_located((By.XPATH,"/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")))
     info = str(containers[0].text).split('\n')
     if "WINNER!" in info:
       info.remove("WINNER!")
@@ -54,8 +55,8 @@ class Team11(object):
 
   def get_phone_no(self):
       driver.get("https://www.dream11.com/leagues")
-      time.sleep(3)
-      driver.find_elements_by_class_name("whiteBorderedButton_6b901")[0].click()
+      white_board = wait.until(ec.visibility_of_element_located((By.CLASS_NAME, "whiteBorderedButton_6b901")))
+      white_board[0].click()
       time.sleep(3)
       print("Phone No verification..")
       jsonData = request.get_json()
@@ -81,41 +82,37 @@ class Team11(object):
       otp.send_keys(otp_no['otp'])
       driver.find_element_by_xpath(
           "/html/body/div/div/div[3]/div/div/div[2]/div[1]/div[2]/button").click()
-      time.sleep(5)
 
       print("Getting info..")
       my_matches = wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div/div/div[3]/div/div/div[3]/div/div/a[2]/div[1]/i")))
       my_matches.click()
-      time.sleep(3)
 
       # Live matches
-      driver.find_element_by_xpath(
-          "/html/body/div/div/div[3]/div/div/div[1]/div[2]/div/div/div[2]").click()
-      time.sleep(3)
+      temp = wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div/div/div[3]/div/div/div[1]/div[2]/div/div/div[2]")))
+      temp.click()
       try:
-          driver.find_element_by_xpath(
-              "/html/body/div/div/div[3]/div/div/div[2]/div/div/div/a/div/div/div[2]").click()
+        live_match =  wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div/div/div[3]/div/div/div[2]/div/div/div/a/div/div/div[2]")))
+        live_match.click()
       except Exception:
-          LIVE = False
-          print("No Live matches currently!")
-          # response_object = {"status": "success",
-          #                   "message": "No LIVE matches in-progress.Please come back during match time!", "live": LIVE}
-          # return jsonify(response_object)
+        LIVE = False
+        print("No Live matches currently!")
+        # response_object = {"status": "success",
+        #                   "message": "No LIVE matches in-progress.Please come back during match time!", "live": LIVE}
+        # return jsonify(response_object)
 
       # Completed Matches
       if not LIVE:
-          driver.find_element_by_xpath(
-              "/html/body/div/div/div[3]/div/div/div[1]/div[2]/div/div/div[3]").click()
-          time.sleep(3)
-          driver.find_element_by_xpath(
-              "/html/body/div/div/div[3]/div/div/div[2]/div/div/div/a/div/div/div[2]").click()
+        driver.find_element_by_xpath(
+            "/html/body/div/div/div[3]/div/div/div[1]/div[2]/div/div/div[3]").click()
+          
+          
+        completed_match = wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div/div/div[3]/div/div/div[2]/div/div/div/a/div/div/div[2]")))
+        completed_match.click()
   
-      time.sleep(3)
-      driver.find_element_by_xpath(
-          "/html/body/div/div/div[3]/div/div/div[2]/div/div[2]/a/div[2]/div/div").click()
-      time.sleep(5)
-      containers = driver.find_elements_by_xpath(
-          "/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")
+      
+      temp1 = wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div/div/div[3]/div/div/div[2]/div/div[2]/a/div[2]/div/div")))
+      temp1.click()
+      containers = wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")))
       info = str(containers[0].text).split('\n')
       if "WINNER!" in info:
           info.remove("WINNER!")
@@ -129,11 +126,23 @@ class Team11(object):
   def insert_teams(self):
       print("Insert teams to DB")
       today = date.today().strftime("%d/%m")
-      match_name = Matches[today]
+      # DB init
       mydb = myclient["team11"]
       mycol = mydb["teams"]
       team_json = request.get_json()
-      team_json['team']['_id'] = match_name
+      match_name = Matches[today]
+      # Insertion logic for Double headers
+      if '-' in match_name:
+          match_list = match_name.split('-')
+          match_list = [item.strip() for item in match_list]
+          time_now = datetime.now()
+          if time_now.strftime("%H") < CUT_OFF_TIME:
+              team_json['team']['_id'] = match_list[0]
+          else:
+              team_json['team']['_id'] = match_list[1]
+      else:
+          team_json['team']['_id'] = match_name
+
       entry_exists = None
       for data in mycol.find():
         if data['_id'] == match_name:     
@@ -156,6 +165,16 @@ class Team11(object):
       mydb = myclient["team11"]
       mycol = mydb["teams"]
       team_from_db = ""
+      if '-' in match_name:
+          match_list = match_name.split('-')
+          match_list = [item.strip() for item in match_list]
+          time_now = datetime.now()
+          # Cut off time for First match to complete - 7:45pm
+          if time_now.strftime("%H%M") < "1945":
+              match_name = match_list[0]
+          else:
+              match_name = match_list[1]
+      
       for data in mycol.find():
         if data['_id'] == match_name:
            team_from_db = data
@@ -191,9 +210,8 @@ class Team11(object):
       leaderboard = self._get_data() 
       # --> Add code here to insert leaderboard of each game to DB <--
       driver.execute_script("window.history.go(-2)")
-      time.sleep(2)
-      driver.find_element_by_xpath(
-          "/html/body/div/div/div[3]/div/div/div[1]/div[2]/div/div/div[3]").click()
+      contest_page = wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div/div/div[3]/div/div/div[1]/div[2]/div/div/div[3]")))
+      contest_page.click()
       time.sleep(1)
   
 team_obj = Team11() 
