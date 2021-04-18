@@ -137,14 +137,18 @@ class Team11(object):
       if '-' in match_name:
           match_list = match_name.split('-')
           match_list = [item.strip() for item in match_list]
+          print("Match list:", match_list)
           time_now = datetime.now()
+          print("--Time in int: %d" % (int(time_now.strftime("%H"))))
           if int(time_now.strftime("%H")) < CUT_OFF_TIME:
+              print("--inside if--")
               team_json['team']['_id'] = match_list[0]
           else:
+              print("--inside else--")
               team_json['team']['_id'] = match_list[1]
       else:
           team_json['team']['_id'] = match_name
-
+      print("--match name:", team_json['team']['_id'])
       entry_exists = None
       for data in mycol.find():
         if data['_id'] == team_json['team']['_id']:     
