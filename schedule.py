@@ -9,7 +9,7 @@ Matches = {
         "15/04" : "RR VS DC 7",
         "16/04" : "PBKS VS CSK 8",
         "17/04" : "MI VS SRH 9",
-        "18/04" : "RCB VS KKR 10 - DC VS PKBS 11",
+        "18/04" : "RCB VS KKR 10 - DC VS PBKS 11",
         "19/04" : "CSK VS RR 12",
         "20/04" : "DC VS MI 13",
         "21/04" : "PBKS VS SRH 14 - KKR VS CSK 15",
