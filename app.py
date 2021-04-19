@@ -24,6 +24,7 @@ CORS(app)
 # Not used
 player_names = {'reub': 'Mighty Spearheads', 'renj': 'Paavam XI', 'suva': 'kaala Venghai',
                 'gopi': 'GOPI5', 'dani': 'Aj team817KT', 'akm': 'SaidapetSuperkings'}
+
 # Selenium attributes
 player_dict = {}
 chrome_options = Options()
