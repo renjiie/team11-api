@@ -136,7 +136,7 @@ class Team11(object):
       complete_matches = mydb["completed matches"]
       team_json = request.get_json()
       match_name = Matches[today]
-      completeDict = {'_id'="",'team'={},'points'={},'winner'=""}
+      completeDict = {}
       # Insertion logic for Double headers
       if '-' in match_name:
           match_list = match_name.split('-')
