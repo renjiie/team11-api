@@ -133,8 +133,10 @@ class Team11(object):
       # DB init
       mydb = myclient["team11"]
       mycol = mydb["teams"]
+      complete_matches = mydb["completed matches"]
       team_json = request.get_json()
       match_name = Matches[today]
+      completeDict = {'_id'="",'team'={},'points'={},'winner'=""}
       # Insertion logic for Double headers
       if '-' in match_name:
           match_list = match_name.split('-')
@@ -146,11 +148,14 @@ class Team11(object):
           if int(time_now.strftime("%H")) < CUT_OFF_TIME:
               print("--inside if--")
               team_json['team']['_id'] = match_list[0]
+              completeDict['_id'] = match_list[0]
           else:
               print("--inside else--")
               team_json['team']['_id'] = match_list[1]
+              completeDict['_id'] = match_list[1]
       else:
           team_json['team']['_id'] = match_name
+          completeDict['_id'] = match_name
       print("--match name:", team_json['team']['_id'])
       entry_exists = None
       for data in mycol.find():
@@ -163,6 +168,7 @@ class Team11(object):
       if not entry_exists:
         print ("Insertion required: Team not present for today's match!");
         mycol.insert_one(team_json['team'])
+        complete_matches.insert_one(completeDict)
         response_object = {"status": "success","message": "Data inserted successfully"}
 
       return jsonify(response_object)
