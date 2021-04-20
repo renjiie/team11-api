@@ -204,9 +204,36 @@ class Team11(object):
           info.remove("WINNER!")
       for i in range(0, len(info), 4):
           player_dict[info[i]] = info[i+2]
-      response_object = {"status": "success",
-              "message": player_dict, "live": LIVE, 'Dbteam': team_from_db}
-      return jsonify(response_object)
+      
+      #code to get the db values and update the current values in db
+      temp_winner = ""
+      temp_win_points = 0
+      for players in player_dict:
+          if temp_win_points < int(player_dict[players]):
+             temp_win_points = int(player_dict[players])
+             temp_winner = player
+
+      complete_matches = mydb["completed matches"]
+      matchList = []
+      tempDict = {"status": "success","message": player_dict, "live": LIVE, 'Dbteam': team_from_db}
+      matchList.append(tempDict)
+      for eachMatch in complete_matches.find():
+          #tempDict = {"status": "success","message": player_dict, "live": LIVE, 'Dbteam': team_from_db}
+          if eachMatch['_id'] != match_name:
+              tempDict["message"] = eachMatch['points']
+              tempDict["live"] = False
+              tempDict['Dbteam'] = eachMatch['team']
+          matchList.append(tempDict)
+      
+      newDict = {}
+      newDict['_id'] = match_name
+      newDict['team'] = team_from_db
+      newDict['points'] = player_dict
+      newDict['winner']= temp_winner
+      complete_matches.insert_one(newDict)
+              
+      response_object = matchList
+      return response_object
 
   def update_db(self):
     print("Updating Historical data to DB")
