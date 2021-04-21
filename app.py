@@ -241,7 +241,7 @@ class Team11(object):
               tempDict['team']=teamsInDb
               tempDict['points']=new_player_dict
               tempDict['winner']=temp_winner
-              complete_matches.update({'_id':match_name},{"$set":{'team':teamsInDb,'points':new_player_dict,'winner'=temp_winner}})
+              complete_matches.update({'_id':match_name},{"$set":{'team':teamsInDb,'points':new_player_dict,'winner':temp_winner}})
           matchList.append(tempDict)
       
       response_object = {"status": "success","message": {"completedTeams": matchList}}
