@@ -219,7 +219,7 @@ class Team11(object):
         print("players", players)
           if temp_win_points < int(player_dict[players]):
              temp_win_points = int(player_dict[players])
-             temp_winner = player
+             temp_winner = players
 
       complete_matches = mydb["completed matches"]
       matchList = []
