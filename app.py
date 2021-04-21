@@ -22,8 +22,8 @@ app = Flask(__name__)
 CORS(app)
 
 # Not used
-player_names = {'reub': 'Mighty Spearheads', 'renj': 'Paavam XI', 'suva': 'kaala Venghai',
-                'gopi': 'GOPI5', 'dani': 'Aj team817KT', 'akm': 'SaidapetSuperkings'}
+player_names = {'Mighty Spearheads':'reub', 'Paavam XI':'renj', 'kaala Venghai':'suva',
+                'PunkBW':'gopi', 'Aj team817KT':'dani', 'SaidapetSuperkings':'akm' }
 
 # Selenium attributes
 player_dict = {}
@@ -169,6 +169,10 @@ class Team11(object):
       if not entry_exists:
         print ("Insertion required: Team not present for today's match!");
         mycol.insert_one(team_json['team'])
+        completeDict['team']= {}
+        for eachItem in team_json['team']:
+          if eachItem != '_id':
+            completeDict['team'].update({eachItem:team_json['team'][eachItem]})
         complete_matches.insert_one(completeDict)
         response_object = {"status": "success","message": "Data inserted successfully"}
 
@@ -220,28 +224,26 @@ class Team11(object):
       print("teamsInDb",teamsInDb)
       temp_winner = ""
       temp_win_points = 0
+      new_player_dict ={}
       for players in player_dict:
           print("players", players)
+          new_player_dict[player_names[players]]=player_dict[players]
           if temp_win_points < float(player_dict[players]):
              temp_win_points = float(player_dict[players])
-             temp_winner = players
-
+             temp_winner = player_names[players]
+      print("new_player_dict",new_player_dict)
       complete_matches = mydb["completed matches"]
       matchList = []
       for eachMatch in complete_matches.find():
           tempDict = eachMatch
           if eachMatch['_id'] == match_name:
               tempDict["live"] = True
+              tempDict['team']=teamsInDb
+              tempDict['points']=new_player_dict
+              tempDict['winner']=temp_winner
+              complete_matches.update({'_id':match_name},{"$set":{'team':teamsInDb,'points':new_player_dict,'winner'=temp_winner}})
           matchList.append(tempDict)
       
-      newDict = {}
-      newDict['_id'] = match_name
-      newDict['team'] = teamsInDb
-      newDict['points'] = player_dict
-      newDict['winner']= temp_winner
-      complete_matches.insert_one(newDict)
-      newDict["live"] = True
-      matchList.append(newDict)
       response_object = {"status": "success","message": {"completedTeams": matchList}}
       return jsonify(response_object)
 
