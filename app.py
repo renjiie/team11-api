@@ -216,7 +216,7 @@ class Team11(object):
       teamsInDb ={}
       for eachTeam in team_from_db:
           if eachTeam != '_id':
-             teamsIndDb[eachItem] = team_from_db[eachItem]
+             teamsIndDb[eachTeam] = team_from_db[eachTeam]
       print("teamsInDb",teamsInDb)
       temp_winner = ""
       temp_win_points = 0
