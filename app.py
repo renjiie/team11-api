@@ -210,9 +210,12 @@ class Team11(object):
 
       info = str(containers[0].text).split('\n')
       print("INFO", info)
-
-      if "WINNER!" in info:
-          info.remove("WINNER!")
+      
+      unwantedList = ["WINNER!","arrow_drop_up","arrow_drop_down"]
+      if any(item in info for item in unwanterList):
+          info.remove(item)
+      '''if "WINNER!" in info:
+          info.remove("WINNER!")'''
       for i in range(0, len(info), 4):
           player_dict[info[i]] = info[i+2]
       
