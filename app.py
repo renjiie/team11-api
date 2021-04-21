@@ -137,6 +137,7 @@ class Team11(object):
       team_json = request.get_json()
       match_name = Matches[today]
       completeDict = {}
+      print("complete Dict:", completeDict)
       # Insertion logic for Double headers
       if '-' in match_name:
           match_list = match_name.split('-')
