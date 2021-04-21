@@ -228,7 +228,6 @@ class Team11(object):
 
       complete_matches = mydb["completed matches"]
       matchList = []
-      matchList.append(tempDict)
       for eachMatch in complete_matches.find():
           tempDict = eachMatch
           if eachMatch['_id'] == match_name:
