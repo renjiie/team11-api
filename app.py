@@ -228,7 +228,7 @@ class Team11(object):
       new_player_dict ={}
       for players in player_dict:
           print("players", players)
-          new_player_dict[player_names[players]]=player_dict[players]
+          new_player_dict[player_names[players]]=float(player_dict[players])
           if temp_win_points < float(player_dict[players]):
              temp_win_points = float(player_dict[players])
              temp_winner = player_names[players]
