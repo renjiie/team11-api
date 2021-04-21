@@ -17,7 +17,7 @@ from selenium.webdriver.support import expected_conditions as ec
 
 LIVE = True
 CUT_OFF_TIME = 11
-
+unwantedList = ["WINNER!","arrow_drop_up","arrow_drop_down"]
 app = Flask(__name__)
 CORS(app)
 
@@ -48,8 +48,8 @@ class Team11(object):
     wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")))    
     containers = driver.find_elements_by_xpath("/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")
     info = str(containers[0].text).split('\n')
-    if "WINNER!" in info:
-      info.remove("WINNER!")
+    if any(item in info for item in unwantedList):
+          info.remove(item)
 
     for i in range(0,len(info),4):
       player_dict[info[i]] = info[i+2]
@@ -118,8 +118,8 @@ class Team11(object):
       wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")))      
       containers = driver.find_elements_by_xpath("/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")
       info = str(containers[0].text).split('\n')
-      if "WINNER!" in info:
-          info.remove("WINNER!")
+      if any(item in info for item in unwantedList):
+          info.remove(item)
       for i in range(0, len(info), 4):
           player_dict[info[i]] = info[i+2]
       print("Player dict", player_dict)
@@ -211,11 +211,9 @@ class Team11(object):
       info = str(containers[0].text).split('\n')
       print("INFO", info)
       
-      unwantedList = ["WINNER!","arrow_drop_up","arrow_drop_down"]
-      if any(item in info for item in unwanterList):
+      if any(item in info for item in unwantedList):
           info.remove(item)
-      '''if "WINNER!" in info:
-          info.remove("WINNER!")'''
+          
       for i in range(0, len(info), 4):
           player_dict[info[i]] = info[i+2]
       
