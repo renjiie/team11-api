@@ -223,14 +223,11 @@ class Team11(object):
 
       complete_matches = mydb["completed matches"]
       matchList = []
-      tempDict = {"status": "success","message": player_dict, "live": LIVE, 'Dbteam': team_from_db}
       matchList.append(tempDict)
       for eachMatch in complete_matches.find():
-          #tempDict = {"status": "success","message": player_dict, "live": LIVE, 'Dbteam': team_from_db}
-          if eachMatch['_id'] != match_name:
-              tempDict["message"] = eachMatch['points']
-              tempDict["live"] = False
-              tempDict['Dbteam'] = eachMatch['team']
+          tempDict = eachMatch
+          if eachMatch['_id'] == match_name:
+              tempDict["live"] = True
           matchList.append(tempDict)
       
       newDict = {}
@@ -239,9 +236,10 @@ class Team11(object):
       newDict['points'] = player_dict
       newDict['winner']= temp_winner
       complete_matches.insert_one(newDict)
-              
-      response_object = matchList
-      return response_object
+      newDict["live"] = True
+      matchList.append(newDict)
+      response_object = {"status": "success","message": {"completedTeams": matchList}}
+      return jsonify(response_object)
 
   def update_db(self):
     print("Updating Historical data to DB")
