@@ -213,12 +213,17 @@ class Team11(object):
           player_dict[info[i]] = info[i+2]
       
       #code to get the db values and update the current values in db
+      teamsInDb ={}
+      for eachTeam in team_from_db:
+          if eachTeam != '_id':
+             teamsIndDb[eachItem] = team_from_db[eachItem]
+      print("teamsInDb",teamsInDb)
       temp_winner = ""
       temp_win_points = 0
       for players in player_dict:
           print("players", players)
-          if temp_win_points < int(player_dict[players]):
-             temp_win_points = int(player_dict[players])
+          if temp_win_points < float(player_dict[players]):
+             temp_win_points = float(player_dict[players])
              temp_winner = players
 
       complete_matches = mydb["completed matches"]
@@ -232,7 +237,7 @@ class Team11(object):
       
       newDict = {}
       newDict['_id'] = match_name
-      newDict['team'] = team_from_db
+      newDict['team'] = teamsInDb
       newDict['points'] = player_dict
       newDict['winner']= temp_winner
       complete_matches.insert_one(newDict)
