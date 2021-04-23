@@ -35,7 +35,7 @@ chrome_options.add_argument("--no-sandbox")
 driver = webdriver.Chrome(executable_path=os.environ.get(
                    "CHROMEDRIVER_PATH"), chrome_options=chrome_options)
 driver.maximize_window()
-wait = WebDriverWait(driver, 25)
+wait = WebDriverWait(driver, 10)
 
 # DB attributes
 myclient = pymongo.MongoClient("mongodb+srv://team11dev:team11dev@cluster0.dqoyp.mongodb.net/test?retryWrites=true&w=majority")
