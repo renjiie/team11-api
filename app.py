@@ -48,8 +48,8 @@ class Team11(object):
     wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")))    
     containers = driver.find_elements_by_xpath("/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")
     info = str(containers[0].text).split('\n')
-    if any(item in info for item in unwantedList):
-          info.remove(item)
+    for item in unwantedList:
+      info.remove(item)
 
     for i in range(0,len(info),4):
       player_dict[info[i]] = info[i+2]
@@ -118,7 +118,7 @@ class Team11(object):
       wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")))      
       containers = driver.find_elements_by_xpath("/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")
       info = str(containers[0].text).split('\n')
-      if any(item in info for item in unwantedList):
+      for item in unwantedList:
           info.remove(item)
       for i in range(0, len(info), 4):
           player_dict[info[i]] = info[i+2]
@@ -211,7 +211,7 @@ class Team11(object):
       info = str(containers[0].text).split('\n')
       print("INFO", info)
       
-      if any(item in info for item in unwantedList):
+      for item in unwantedList:
           info.remove(item)
           
       for i in range(0, len(info), 4):
