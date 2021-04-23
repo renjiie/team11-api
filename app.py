@@ -120,7 +120,7 @@ class Team11(object):
       containers = driver.find_elements_by_xpath("/html/body/div/div/div[3]/div/div/div[5]/div[2]/div[1]/div[3]/div")
       info = str(containers[0].text).split('\n')
       for item in unwantedList:
-          if any(item in info):
+          if item in info:
              info.remove(item)
       for i in range(0, len(info), 4):
           player_dict[info[i]] = info[i+2]
