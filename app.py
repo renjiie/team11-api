@@ -52,6 +52,7 @@ class Team11(object):
       if item in info:
          info.remove(item)
 
+    print("Info in getdata ",info)
     for i in range(0,len(info),4):
       player_dict[info[i]] = info[i+2]
     return player_dict
@@ -122,6 +123,8 @@ class Team11(object):
       for item in unwantedList:
           if item in info:
              info.remove(item)
+      
+      print("Info in getotp ",info)
       for i in range(0, len(info), 4):
           player_dict[info[i]] = info[i+2]
       print("Player dict", player_dict)
@@ -216,7 +219,8 @@ class Team11(object):
       for item in unwantedList:
           if item in info:
              info.remove(item)
-          
+      
+      print("Info in refresh ",info)
       for i in range(0, len(info), 4):
           player_dict[info[i]] = info[i+2]
       
