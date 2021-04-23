@@ -17,7 +17,7 @@ from selenium.webdriver.support import expected_conditions as ec
 
 LIVE = True
 CUT_OFF_TIME = 11
-unwantedList = ["WINNER!","arrow_drop_up","arrow_drop_down"]
+unwantedList = ["WINNER!","arrow_drop_up","arrow_drop_down","YOU WON !"]
 app = Flask(__name__)
 CORS(app)
 
