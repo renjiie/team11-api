@@ -184,6 +184,7 @@ class Team11(object):
       return jsonify(response_object)
 
   def do_refresh(self):
+      global LIVE
       print("Updating latest points")
       today = date.today().strftime("%d/%m")
       match_name = Matches[today]
@@ -245,7 +246,7 @@ class Team11(object):
       for eachMatch in complete_matches.find():
           tempDict = eachMatch
           if eachMatch['_id'] == match_name:
-              tempDict["live"] = True
+              tempDict["live"] = LIVE
               tempDict['team']=teamsInDb
               tempDict['points']=new_player_dict
               tempDict['winner']=temp_winner
